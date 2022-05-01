@@ -15,14 +15,21 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from sklearn.metrics import confusion_matrix
 
+#returns an error if removed, images too large
 Image.MAX_IMAGE_PIXELS = None 
 
+#WikiArt dataset
 artpath = "./wikiart/wikiart/"
 
+#names of artworks
 artworks = []
 testworks = []
+
+#style by number
 styles = []
 teststyles = []
+
+# vectorized images
 X_train = []
 y_train = []
 X_test = []
@@ -82,7 +89,7 @@ model = Sequential()
 # convolutional layer
 model.add(Conv2D(50, kernel_size=(3,3), strides=(1,1), padding='same', activation='relu', input_shape=(64, 64, 3)))
 
-# convolutional layer
+# convolutional layers
 model.add(Conv2D(75, kernel_size=(3,3), strides=(1,1), padding='same', activation='relu'))
 model.add(MaxPool2D(pool_size=(2,2)))
 model.add(Dropout(0.25))
@@ -103,14 +110,14 @@ model.add(Dense(500, activation='relu'))
 model.add(Dropout(0.4))
 model.add(Dense(250, activation='relu'))
 model.add(Dropout(0.3))
+
 # output layer
-#model.add(Dense(27, activation='softmax')) -- changed num of classes
 model.add(Dense(27, activation='softmax'))
 
 # compiling the sequential model
 model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
 
-# training the model for 10 epochs
+# training the model for 20 epochs
 model.fit(X_train, y_train, batch_size=128, epochs=20, validation_data=(X_test, y_test))
 
 #best so far -- 40% validation accuracy
@@ -172,10 +179,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     print(cm)
 
     thresh = cm.max() / 2.
-#    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
- #       plt.text(j, i, cm[i, j],
-  #          horizontalalignment="center",
-   #         color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
     plt.ylabel('True label')
